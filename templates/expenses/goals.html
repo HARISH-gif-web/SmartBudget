@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Savings Goals - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold text-main mb-1">Savings Goals</h2>
+      <p class="text-muted mb-0">Set ambitious financial targets, track your progress, and build long-term wealth.</p>
+    </div>
+    <a href="{% url 'goal_add' %}" class="btn btn-primary-saas">
+      <i class="bi bi-plus-lg"></i> Create Goal
+    </a>
+  </div>
+
+  <!-- Summary Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card-metric savings-card p-3">
+        <div class="metric-title small">Total Savings Target</div>
+        <div class="metric-value fs-4 text-purple">{{ CURRENCY_SYMBOL }}{{ total_target|floatformat:2 }}</div>
+        <small class="text-muted">Across all defined goals</small>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-metric remaining-card p-3">
+        <div class="metric-title small">Total Amount Saved</div>
+        <div class="metric-value fs-4 text-success">{{ CURRENCY_SYMBOL }}{{ total_saved|floatformat:2 }}</div>
+        <small class="text-muted">Funds actively accumulated</small>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-metric budget-card p-3">
+        <div class="metric-title small">Completed Goals</div>
+        <div class="metric-value fs-4 text-primary">{{ completed_count }} / {{ goals|length }}</div>
+        <small class="text-muted">Targets successfully achieved</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goals Grid -->
+  <div class="row g-4">
+    {% for goal in goals %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card-saas h-100 p-4 d-flex flex-column justify-content-between position-relative">
+          {% if goal.is_completed %}
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge badge-normal"><i class="bi bi-trophy-fill me-1"></i> Completed</span>
+            </div>
+          {% endif %}
+
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <div class="metric-icon-wrap bg-purple-subtle text-purple fs-4">
+                🎯
+              </div>
+              <div>
+                <h5 class="fw-bold text-main mb-0">{{ goal.name }}</h5>
+                {% if goal.deadline %}
+                  <small class="text-muted">Target: {{ goal.deadline|date:"d M Y" }}</small>
+                {% else %}
+                  <small class="text-muted">No deadline set</small>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Target & Saved -->
+            <div class="d-flex justify-content-between small text-muted mb-1">
+              <span>Saved: <strong class="text-main">{{ CURRENCY_SYMBOL }}{{ goal.saved_amount|floatformat:0 }}</strong></span>
+              <span>Target: <strong class="text-main">{{ CURRENCY_SYMBOL }}{{ goal.target_amount|floatformat:0 }}</strong></span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-saas mb-2" style="height: 10px;">
+              <div 
+                class="progress-bar {% if goal.is_completed %}bg-success{% else %}progress-bar-purple{% endif %}" 
+                style="width: {{ goal.progress_percentage }}%;"
+              ></div>
+            </div>
+
+            <div class="d-flex justify-content-between small mb-3">
+              <span class="fw-bold {% if goal.is_completed %}text-success{% else %}text-purple{% endif %}">
+                {{ goal.progress_percentage }}% Completed
+              </span>
+              <span class="text-muted">
+                Remaining: {{ CURRENCY_SYMBOL }}{{ goal.remaining|floatformat:0 }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="pt-3 border-top border-light d-flex justify-content-between align-items-center gap-2">
+            <!-- Quick Deposit Button / Modal Trigger -->
+            <button 
+              type="button" 
+              class="btn btn-sm btn-primary-saas flex-grow-1 justify-content-center"
+              data-bs-toggle="modal" 
+              data-bs-target="#depositModal{{ goal.id }}"
+            >
+              <i class="bi bi-cash-stack"></i> Add Savings
+            </button>
+
+            <a href="{% url 'goal_edit' goal.id %}" class="btn btn-sm btn-secondary-saas" title="Edit Goal">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <a href="{% url 'goal_delete' goal.id %}" class="btn btn-sm btn-outline-danger" title="Delete Goal">
+              <i class="bi bi-trash"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Deposit Modal for this goal -->
+        <div class="modal fade" id="depositModal{{ goal.id }}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content card-saas p-3 border-0">
+              <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-main">
+                  Deposit Funds &bull; {{ goal.name }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="{% url 'goal_deposit' goal.id %}" method="post">
+                {% csrf_token %}
+                <div class="modal-body py-3">
+                  <p class="small text-muted mb-3">
+                    Target: {{ CURRENCY_SYMBOL }}{{ goal.target_amount|floatformat:2 }} &bull; Current Saved: {{ CURRENCY_SYMBOL }}{{ goal.saved_amount|floatformat:2 }}
+                  </p>
+                  <label class="form-label small fw-semibold text-main">Deposit Amount ({{ CURRENCY_SYMBOL }})</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-hover border-end-0 fw-bold">{{ CURRENCY_SYMBOL }}</span>
+                    <input type="number" step="0.01" min="0.01" name="deposit_amount" class="form-control" placeholder="e.g. 1000.00" required>
+                  </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                  <button type="button" class="btn btn-secondary-saas" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary-saas">Confirm Deposit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="card-saas p-5 text-center text-muted">
+          <span class="fs-1 mb-2 d-block">🎯</span>
+          <h5 class="fw-bold text-main">No Savings Goals Set</h5>
+          <p class="small mb-3">Define a savings milestone like a vacation, emergency fund, or new laptop.</p>
+          <a href="{% url 'goal_add' %}" class="btn btn-primary-saas btn-sm">Create Savings Goal</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

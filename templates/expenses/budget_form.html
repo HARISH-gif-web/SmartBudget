@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+      <div class="card-saas p-4 p-md-5">
+        <div class="d-flex align-items-center gap-3 mb-4 pb-2 border-bottom border-light">
+          <div class="metric-icon-wrap bg-primary-subtle text-primary fs-3">
+            🎯
+          </div>
+          <div>
+            <h3 class="fw-bold text-main mb-0">{{ title }}</h3>
+            <p class="text-muted small mb-0">Set monthly spending limits by category.</p>
+          </div>
+        </div>
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+            {% for error in form.non_field_errors %}
+              <div><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Category -->
+          <div class="mb-3">
+            <label for="budget_category" class="form-label fw-semibold small text-main">Category <span class="text-danger">*</span></label>
+            {{ form.category }}
+            {% if form.category.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.category.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Budget Amount -->
+          <div class="mb-3">
+            <label for="budget_amount" class="form-label fw-semibold small text-main">Budget Amount ({{ CURRENCY_SYMBOL }}) <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-hover border-end-0 fw-bold">{{ CURRENCY_SYMBOL }}</span>
+              {{ form.amount }}
+            </div>
+            {% if form.amount.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.amount.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Month & Year -->
+          <div class="row g-2 mb-4">
+            <div class="col-7">
+              <label for="budget_month" class="form-label fw-semibold small text-main">Month <span class="text-danger">*</span></label>
+              {{ form.month }}
+              {% if form.month.errors %}
+                <div class="text-danger small mt-1">{{ form.month.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-5">
+              <label for="budget_year" class="form-label fw-semibold small text-main">Year <span class="text-danger">*</span></label>
+              {{ form.year }}
+              {% if form.year.errors %}
+                <div class="text-danger small mt-1">{{ form.year.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary-saas px-4 py-2">
+              Save Budget
+            </button>
+            <a href="{% url 'budget_list' %}" class="btn btn-secondary-saas px-4 py-2">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

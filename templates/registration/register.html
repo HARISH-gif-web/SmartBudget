@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Create an Account - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+      <!-- Two-Column Card matching Panel 2 -->
+      <div class="auth-card-wrapper row g-0">
+        
+        <!-- Left Column: Registration Form -->
+        <div class="col-md-7 auth-form-column">
+          <h3 class="fw-bold text-main mb-1">Create an Account</h3>
+          <p class="text-muted small mb-4">Join Expense Tracker and take control of your finances.</p>
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+              {% for error in form.non_field_errors %}
+                <div><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form method="post" action="{% url 'register' %}" novalidate>
+            {% csrf_token %}
+
+            <!-- Full Name -->
+            <div class="mb-3">
+              <label for="reg_full_name" class="form-label small fw-semibold text-main mb-1">Full Name</label>
+              <div class="input-icon-group">
+                <i class="bi bi-person"></i>
+                <input type="text" name="full_name" id="reg_full_name" class="form-control" placeholder="Enter your full name" required value="{{ form.full_name.value|default:'' }}">
+              </div>
+              {% if form.full_name.errors %}
+                <div class="text-danger small mt-1">{{ form.full_name.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Email Address -->
+            <div class="mb-3">
+              <label for="reg_email" class="form-label small fw-semibold text-main mb-1">Email Address</label>
+              <div class="input-icon-group">
+                <i class="bi bi-envelope"></i>
+                <input type="email" name="email" id="reg_email" class="form-control" placeholder="Enter your email address" required value="{{ form.email.value|default:'' }}">
+              </div>
+              {% if form.email.errors %}
+                <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Username -->
+            <div class="mb-3">
+              <label for="reg_username" class="form-label small fw-semibold text-main mb-1">Username</label>
+              <div class="input-icon-group">
+                <i class="bi bi-person-badge"></i>
+                <input type="text" name="username" id="reg_username" class="form-control" placeholder="Enter your username" required value="{{ form.username.value|default:'' }}">
+              </div>
+              {% if form.username.errors %}
+                <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              <label for="reg_password" class="form-label small fw-semibold text-main mb-1">Password</label>
+              <div class="input-icon-group input-group">
+                <i class="bi bi-lock"></i>
+                <input type="password" name="password" id="reg_password" class="form-control" placeholder="Enter your password" required>
+                <button class="btn btn-outline-secondary toggle-password-btn" type="button" data-target="reg_password">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              {% if form.password.errors %}
+                <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+              <label for="reg_confirm_password" class="form-label small fw-semibold text-main mb-1">Confirm Password</label>
+              <div class="input-icon-group input-group">
+                <i class="bi bi-lock-fill"></i>
+                <input type="password" name="confirm_password" id="reg_confirm_password" class="form-control" placeholder="Confirm your password" required>
+                <button class="btn btn-outline-secondary toggle-password-btn" type="button" data-target="reg_confirm_password">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              {% if form.confirm_password.errors %}
+                <div class="text-danger small mt-1">{{ form.confirm_password.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Terms and Conditions Checkbox -->
+            <div class="mb-3 form-check">
+              <input type="checkbox" name="terms" id="reg_terms" class="form-check-input" required checked>
+              <label class="form-check-label small text-muted" for="reg_terms">
+                I agree to the <a href="{% url 'help' %}#terms" class="text-primary text-decoration-none">Terms and Conditions</a>
+              </label>
+              {% if form.terms.errors %}
+                <div class="text-danger small mt-1">{{ form.terms.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary-saas w-100 py-2.5 justify-content-center mb-3">
+              Create Account
+            </button>
+          </form>
+
+          <div class="text-center">
+            <span class="small text-muted">Already have an account? </span>
+            <a href="{% url 'login' %}" class="small text-primary fw-semibold text-decoration-none">Login</a>
+          </div>
+        </div>
+
+        <!-- Right Column: Illustration & Feature Checklist (Matches Panel 2) -->
+        <div class="col-md-5 auth-feature-column">
+          <!-- Clipboard Illustration with potted plant -->
+          <div class="text-center mb-4">
+            <svg viewBox="0 0 180 160" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 140px; height: auto;">
+              <!-- Clipboard Board -->
+              <rect x="35" y="25" width="110" height="130" rx="14" fill="#3B82F6"/>
+              <rect x="42" y="32" width="96" height="116" rx="10" fill="#FFFFFF"/>
+              <!-- Clip -->
+              <rect x="70" y="16" width="40" height="18" rx="6" fill="#1E293B"/>
+              <rect x="80" y="20" width="20" height="6" rx="3" fill="#64748B"/>
+              <!-- Profile Avatar on Sheet -->
+              <circle cx="90" cy="65" r="18" fill="#E8F1FC"/>
+              <circle cx="90" cy="60" r="8" fill="#3B82F6"/>
+              <path d="M78,76 C78,70 102,70 102,76 Z" fill="#3B82F6"/>
+              <!-- Lines on sheet -->
+              <rect x="60" y="94" width="60" height="4" rx="2" fill="#E2E8F0"/>
+              <rect x="60" y="104" width="45" height="4" rx="2" fill="#E2E8F0"/>
+              <rect x="60" y="114" width="52" height="4" rx="2" fill="#E2E8F0"/>
+              <!-- Potted plant on side -->
+              <rect x="135" y="110" width="16" height="24" rx="4" fill="#E06D53"/>
+              <ellipse cx="143" cy="98" rx="6" ry="14" fill="#10B981" transform="rotate(10 143 98)"/>
+              <ellipse cx="137" cy="96" rx="5" ry="12" fill="#059669" transform="rotate(-15 137 96)"/>
+            </svg>
+          </div>
+
+          <!-- Feature Checklist Items (Matches Panel 2 exactly) -->
+          <div class="w-100" style="max-width: 250px;">
+            <div class="auth-feature-item">
+              <div class="auth-feature-dot" style="background-color: #10B981;">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <span>Track your daily expenses</span>
+            </div>
+
+            <div class="auth-feature-item">
+              <div class="auth-feature-dot" style="background-color: #3B82F6;">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <span>Manage monthly budgets</span>
+            </div>
+
+            <div class="auth-feature-item">
+              <div class="auth-feature-dot" style="background-color: #EF4444;">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <span>Get instant spending alerts</span>
+            </div>
+
+            <div class="auth-feature-item">
+              <div class="auth-feature-dot" style="background-color: #8B5CF6;">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <span>Achieve your financial goals</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card-saas p-4 p-md-5">
+        <div class="d-flex align-items-center gap-3 mb-4 pb-2 border-bottom border-light">
+          <div class="metric-icon-wrap bg-primary-subtle text-primary fs-3">
+            ⚙️
+          </div>
+          <div>
+            <h3 class="fw-bold text-main mb-0">Application Settings</h3>
+            <p class="text-muted small mb-0">Customize your display preferences and alert thresholds.</p>
+          </div>
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <!-- Setting 1: Dark Mode -->
+          <div class="p-3 rounded-3 bg-hover mb-3 border border-light d-flex align-items-center justify-content-between">
+            <div>
+              <div class="fw-semibold text-main">
+                <i class="bi bi-moon-stars text-primary me-2"></i>Dark Mode
+              </div>
+              <small class="text-muted">Switch application theme to high-contrast dark palette</small>
+            </div>
+            <div class="form-check form-switch fs-5 mb-0">
+              {{ form.dark_mode }}
+            </div>
+          </div>
+
+          <!-- Setting 2: Email Notifications -->
+          <div class="p-3 rounded-3 bg-hover mb-3 border border-light d-flex align-items-center justify-content-between">
+            <div>
+              <div class="fw-semibold text-main">
+                <i class="bi bi-envelope-at text-success me-2"></i>Email Notifications
+              </div>
+              <small class="text-muted">Receive email digests and critical threshold warnings</small>
+            </div>
+            <div class="form-check form-switch fs-5 mb-0">
+              {{ form.email_notifications }}
+            </div>
+          </div>
+
+          <!-- Setting 3: Currency Preference -->
+          <div class="mb-3">
+            <label for="setting_currency" class="form-label fw-semibold small text-main">
+              <i class="bi bi-currency-exchange me-1"></i>Primary Currency
+            </label>
+            {{ form.currency }}
+            <div class="form-text small text-muted">Default system currency is ₹ INR (Indian Rupee).</div>
+          </div>
+
+          <!-- Setting 4: Alert Threshold -->
+          <div class="mb-4">
+            <label for="setting_threshold" class="form-label fw-semibold small text-main">
+              <i class="bi bi-bell-fill text-warning me-1"></i>Budget Warning Threshold (%)
+            </label>
+            <div class="input-group">
+              {{ form.monthly_budget_threshold }}
+              <span class="input-group-text bg-hover">%</span>
+            </div>
+            <div class="form-text small text-muted">Default is 80%. When your category spending reaches this percentage, a warning is triggered.</div>
+          </div>
+
+          <!-- Actions -->
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary-saas px-4 py-2">
+              Save Settings
+            </button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary-saas px-4 py-2">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

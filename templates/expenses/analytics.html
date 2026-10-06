@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block title %}Expense Analytics - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <!-- Header (Matches Panel 8) -->
+  <div class="mb-4">
+    <h3 class="fw-bold text-main mb-1">Expense Analytics</h3>
+    <p class="text-muted small mb-0">Visualize your spending patterns</p>
+  </div>
+
+  <!-- Row 1: Two Charts Side by Side (Matches Panel 8) -->
+  <div class="row g-4 mb-4">
+    <!-- Left: Monthly Spending Bar Chart -->
+    <div class="col-lg-7">
+      <div class="card-saas h-100 p-3.5">
+        <h6 class="fw-bold text-main mb-3">Monthly Spending</h6>
+        <div style="height: 240px;">
+          <canvas id="monthlyTrendChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Category-wise Spending Doughnut Chart -->
+    <div class="col-lg-5">
+      <div class="card-saas h-100 p-3.5">
+        <h6 class="fw-bold text-main mb-2">Category-wise Spending</h6>
+        <div class="row align-items-center g-2 my-auto" style="min-height: 230px;">
+          <!-- Chart -->
+          <div class="col-7 position-relative d-flex justify-content-center align-items-center">
+            <canvas id="categoryBreakdownChart" style="max-height: 200px;"></canvas>
+            <div class="position-absolute text-center" style="pointer-events: none;">
+              <div class="fw-bold fs-5 text-main">₹10,500</div>
+              <small class="text-muted" style="font-size: 0.7rem;">Total Spent</small>
+            </div>
+          </div>
+          <!-- Legend on Right (Matches Panel 8 exactly) -->
+          <div class="col-5">
+            <div class="d-flex flex-column gap-2 small">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="d-flex align-items-center gap-1.5">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #3b82f6;"></span>
+                  <span>Food</span>
+                </span>
+                <span class="text-muted fw-semibold">40%</span>
+              </div>
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="d-flex align-items-center gap-1.5">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #ef4444;"></span>
+                  <span>Travel</span>
+                </span>
+                <span class="text-muted fw-semibold">39%</span>
+              </div>
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="d-flex align-items-center gap-1.5">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #10b981;"></span>
+                  <span>Education</span>
+                </span>
+                <span class="text-muted fw-semibold">14%</span>
+              </div>
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="d-flex align-items-center gap-1.5">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #8b5cf6;"></span>
+                  <span>Shopping</span>
+                </span>
+                <span class="text-muted fw-semibold">7%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Four Bottom Stat Cards (Matches Panel 8 exactly) -->
+  <div class="row g-3">
+    <!-- Stat 1: Highest Spending -->
+    <div class="col-sm-6 col-lg-3">
+      <div class="card-saas p-3 d-flex align-items-center gap-3">
+        <div class="metric-icon-wrap" style="background-color: #FEF7E7; color: #F59E0B; width: 42px; height: 42px; border-radius: 10px; font-size: 1.2rem;">
+          🍔
+        </div>
+        <div>
+          <div class="text-muted" style="font-size: 0.75rem;">Highest Spending</div>
+          <div class="text-muted small fw-medium">Food</div>
+          <div class="fw-bold text-main fs-5">{{ CURRENCY_SYMBOL }}4,200</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat 2: Average Daily Spending -->
+    <div class="col-sm-6 col-lg-3">
+      <div class="card-saas p-3 d-flex align-items-center gap-3">
+        <div class="metric-icon-wrap" style="background-color: #E8F1FC; color: #1E6DEB; width: 42px; height: 42px; border-radius: 10px; font-size: 1.2rem;">
+          <i class="bi bi-calendar-event"></i>
+        </div>
+        <div>
+          <div class="text-muted" style="font-size: 0.75rem;">Average Daily Spending</div>
+          <div class="fw-bold text-main fs-5 mt-1">{{ CURRENCY_SYMBOL }}339</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat 3: Total Expenses -->
+    <div class="col-sm-6 col-lg-3">
+      <div class="card-saas p-3 d-flex align-items-center gap-3">
+        <div class="metric-icon-wrap" style="background-color: #F3ECFC; color: #8B5CF6; width: 42px; height: 42px; border-radius: 10px; font-size: 1.2rem;">
+          <i class="bi bi-credit-card-2-front"></i>
+        </div>
+        <div>
+          <div class="text-muted" style="font-size: 0.75rem;">Total Expenses</div>
+          <div class="fw-bold text-main fs-5 mt-1">{{ CURRENCY_SYMBOL }}10,500</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat 4: Remaining Budget -->
+    <div class="col-sm-6 col-lg-3">
+      <div class="card-saas p-3 d-flex align-items-center gap-3">
+        <div class="metric-icon-wrap" style="background-color: #E7F8EF; color: #10B981; width: 42px; height: 42px; border-radius: 10px; font-size: 1.2rem;">
+          <i class="bi bi-wallet2"></i>
+        </div>
+        <div>
+          <div class="text-muted" style="font-size: 0.75rem;">Remaining Budget</div>
+          <div class="fw-bold text-main fs-5 mt-1">{{ CURRENCY_SYMBOL }}4,500</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+    const gridColor = isDark ? '#1e293b' : '#f1f5f9';
+
+    // 1. Monthly Spending Bar Chart (Jan - Oct from Panel 8)
+    const barCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
+    const spendingAmounts = [1200, 2400, 3100, 4200, 5000, 5800, 6900, 7800, 9200, 10500];
+
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{
+          data: spendingAmounts,
+          backgroundColor: '#3b82f6',
+          borderRadius: 4,
+          borderSkipped: false,
+          barPercentage: 0.6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function (ctx) {
+                return ` Spending: ₹${ctx.raw.toLocaleString('en-IN')}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: textColor, font: { family: 'Inter', size: 10 } }
+          },
+          y: {
+            min: 0,
+            max: 10000,
+            ticks: {
+              stepSize: 2500,
+              color: textColor,
+              font: { family: 'Inter', size: 10 },
+              callback: function (val) {
+                return '₹' + val.toLocaleString('en-IN');
+              }
+            },
+            grid: { color: gridColor }
+          }
+        }
+      }
+    });
+
+    // 2. Category-wise Spending Doughnut Chart (Panel 8)
+    const doughnutCtx = document.getElementById('categoryBreakdownChart').getContext('2d');
+    new Chart(doughnutCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Food', 'Travel', 'Education', 'Shopping'],
+        datasets: [{
+          data: [4200, 1500, 4100, 700],
+          backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#8b5cf6'],
+          borderWidth: 2,
+          borderColor: isDark ? '#131d33' : '#ffffff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '72%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function (ctx) {
+                return ` ${ctx.label}: ₹${ctx.raw.toLocaleString('en-IN')}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

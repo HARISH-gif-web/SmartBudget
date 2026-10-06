@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Help &amp; FAQ - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="max-w-800 mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-5">
+      <div class="fs-1 mb-2">❓</div>
+      <h2 class="fw-bold text-main">Help Center &amp; Documentation</h2>
+      <p class="text-muted">Everything you need to know about navigating and using Expense Tracker.</p>
+    </div>
+
+    <!-- Section 1: Navigation Guide -->
+    <div class="card-saas p-4 mb-4">
+      <h4 class="fw-bold text-main mb-3">
+        <i class="bi bi-compass text-primary me-2"></i>How to Navigate the Application
+      </h4>
+      <p class="text-muted small">
+        Expense Tracker features a clean, distraction-free interface designed without permanent sidebars or clutter.
+      </p>
+      <ul class="list-unstyled small text-main mb-0">
+        <li class="mb-2">
+          <strong>Dashboard:</strong> Click the <strong>💰 Expense Tracker</strong> logo in the top-left to return to your financial dashboard at any time.
+        </li>
+        <li class="mb-2">
+          <strong>Three-Vertical-Dots Menu (⋮):</strong> Located in the top-right corner of the navigation bar. Click this menu to access <em>Expenses, Categories, Budgets, Analytics, Goals, Calendar, Reports, Profile, Settings,</em> and <em>Logout</em>.
+        </li>
+        <li class="mb-2">
+          <strong>Global Search:</strong> Type any keyword in the search bar and press <kbd>Enter</kbd> to search across your expenses and categories.
+        </li>
+      </ul>
+    </div>
+
+    <!-- Section 2: Budget Alert Engine -->
+    <div class="card-saas p-4 mb-4">
+      <h4 class="fw-bold text-main mb-3">
+        <i class="bi bi-shield-check text-success me-2"></i>Budget Alert Logic &amp; Thresholds
+      </h4>
+      <p class="text-muted small">
+        Our automated alert engine evaluates every transaction in real-time using the formula:
+      </p>
+      <div class="p-3 rounded-3 bg-hover font-monospace small mb-3 border border-light">
+        Usage % = (Total Category Spending / Category Budget) &times; 100
+      </div>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="p-3 rounded-3 border border-success-subtle bg-success-subtle text-success">
+            <div class="fw-bold fs-6 mb-1">🟢 Normal</div>
+            <div class="small">Usage &lt; 80%</div>
+            <div class="small text-muted mt-1">Healthy budget margin. Spending is comfortably within parameters.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 rounded-3 border border-warning-subtle bg-warning-subtle text-warning">
+            <div class="fw-bold fs-6 mb-1">🟡 Warning</div>
+            <div class="small">80% &le; Usage &lt; 100%</div>
+            <div class="small text-muted mt-1">Nearing the limit. An in-app alert is generated automatically.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 rounded-3 border border-danger-subtle bg-danger-subtle text-danger">
+            <div class="fw-bold fs-6 mb-1">🔴 Danger / Exceeded</div>
+            <div class="small">Usage &ge; 100%</div>
+            <div class="small text-muted mt-1">Limit reached or exceeded. High-priority red alert triggered.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Frequently Asked Questions -->
+    <div class="card-saas p-4 mb-4">
+      <h4 class="fw-bold text-main mb-3">
+        <i class="bi bi-patch-question text-info me-2"></i>Frequently Asked Questions
+      </h4>
+      <div class="accordion accordion-flush" id="faqAccordion">
+        <div class="accordion-item bg-transparent">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-semibold text-main px-0 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+              Can I customize the currency symbol?
+            </button>
+          </h2>
+          <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body px-0 small text-muted">
+              Yes! While the application defaults to Indian Rupee (₹ INR), you can navigate to <strong>Settings</strong> to pick USD ($), EUR (€), GBP (£), or other supported world currencies.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item bg-transparent">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-semibold text-main px-0 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+              Is my financial data shared with any third party?
+            </button>
+          </h2>
+          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body px-0 small text-muted">
+              No. All user data is isolated strictly by your authenticated user session. User A cannot see, edit, or access any records created by User B.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item bg-transparent">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed fw-semibold text-main px-0 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+              How do I export my data for tax filing or spreadsheets?
+            </button>
+          </h2>
+          <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body px-0 small text-muted">
+              Open the <strong>Reports</strong> page from the three-dot menu, select your target month or category, and click <strong>Export CSV</strong> to download a complete spreadsheet.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Terms & Conditions -->
+    <div class="card-saas p-4" id="terms">
+      <h4 class="fw-bold text-main mb-3">
+        <i class="bi bi-file-earmark-text text-muted me-2"></i>Terms &amp; Conditions
+      </h4>
+      <p class="small text-muted mb-2">
+        By using Expense Tracker, you agree to manage your personal finance records for lawful, personal purposes. Your information is stored securely in your private SQLite database.
+      </p>
+      <p class="small text-muted mb-0">
+        You may modify or delete your expense categories, budgets, and transactions at any time. For questions, reach out via our contact support page.
+      </p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

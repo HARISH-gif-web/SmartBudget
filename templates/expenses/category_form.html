@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+      <div class="card-saas p-4 p-md-5">
+        <div class="d-flex align-items-center gap-3 mb-4 pb-2 border-bottom border-light">
+          <div class="metric-icon-wrap bg-primary-subtle text-primary fs-3">
+            📂
+          </div>
+          <div>
+            <h3 class="fw-bold text-main mb-0">{{ title }}</h3>
+            <p class="text-muted small mb-0">Organize and group your expenses easily.</p>
+          </div>
+        </div>
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+            {% for error in form.non_field_errors %}
+              <div><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Category Name -->
+          <div class="mb-3">
+            <label for="category_name" class="form-label fw-semibold small text-main">Category Name <span class="text-danger">*</span></label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Icon / Emoji -->
+          <div class="mb-3">
+            <label for="category_icon" class="form-label fw-semibold small text-main">Category Icon / Emoji <span class="text-danger">*</span></label>
+            {{ form.icon }}
+            {% if form.icon.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.icon.errors.0 }}</div>
+            {% endif %}
+            
+            <!-- Quick emoji helper buttons -->
+            <div class="d-flex flex-wrap gap-1 mt-2">
+              <span class="small text-muted me-2 align-self-center">Suggested:</span>
+              {% for emoji in "🍔 ✈️ 🎓 🛍️ 🏥 🎬 💡 🛒 💼 🚗 🏋️ 🎁 🍕 ☕ 🎮 🏠"|make_list %}
+                {% if emoji != " " %}
+                  <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-1.5 emoji-pick-btn" onclick="document.getElementById('category_icon').value='{{ emoji }}'">{{ emoji }}</button>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-4">
+            <label for="category_description" class="form-label fw-semibold small text-main">Description (Optional)</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.description.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary-saas px-4 py-2">
+              Save Category
+            </button>
+            <a href="{% url 'category_list' %}" class="btn btn-secondary-saas px-4 py-2">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

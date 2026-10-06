@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+      <div class="card-saas p-4 p-md-5">
+        <div class="d-flex align-items-center gap-3 mb-4 pb-2 border-bottom border-light">
+          <div class="metric-icon-wrap bg-purple-subtle text-purple fs-3">
+            🎯
+          </div>
+          <div>
+            <h3 class="fw-bold text-main mb-0">{{ title }}</h3>
+            <p class="text-muted small mb-0">Set your financial goal and target date.</p>
+          </div>
+        </div>
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+            {% for error in form.non_field_errors %}
+              <div><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Goal Name -->
+          <div class="mb-3">
+            <label for="goal_name" class="form-label fw-semibold small text-main">Goal Name <span class="text-danger">*</span></label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Target Amount -->
+          <div class="mb-3">
+            <label for="goal_target_amount" class="form-label fw-semibold small text-main">Target Amount ({{ CURRENCY_SYMBOL }}) <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-hover border-end-0 fw-bold">{{ CURRENCY_SYMBOL }}</span>
+              {{ form.target_amount }}
+            </div>
+            {% if form.target_amount.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.target_amount.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Currently Saved -->
+          <div class="mb-3">
+            <label for="goal_saved_amount" class="form-label fw-semibold small text-main">Initial Saved Amount ({{ CURRENCY_SYMBOL }})</label>
+            <div class="input-group">
+              <span class="input-group-text bg-hover border-end-0 fw-bold">{{ CURRENCY_SYMBOL }}</span>
+              {{ form.saved_amount }}
+            </div>
+            {% if form.saved_amount.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.saved_amount.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Deadline -->
+          <div class="mb-4">
+            <label for="goal_deadline" class="form-label fw-semibold small text-main">Target Deadline (Optional)</label>
+            {{ form.deadline }}
+            {% if form.deadline.errors %}
+              <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.deadline.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary-saas px-4 py-2">
+              Save Goal
+            </button>
+            <a href="{% url 'goals' %}" class="btn btn-secondary-saas px-4 py-2">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

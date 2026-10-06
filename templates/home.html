@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Expense Tracker - Track Smarter. Spend Better.{% endblock %}
+
+{% block content %}
+<div class="landing-page" id="home">
+  <section class="hero-section">
+    <div class="hero-shell">
+      <div class="hero-copy">
+        <h1>Track Smarter.<br>Spend Better.</h1>
+        <p>Manage your expenses, set budgets, control your spending, and achieve your financial goals — all in one simple place.</p>
+
+        <div class="hero-actions">
+          <a href="{% url 'register' %}" class="btn btn-primary-saas btn-lg loading-link">Get Started Free <span>→</span></a>
+          <a href="#features" class="btn btn-secondary-saas btn-lg">Explore Features</a>
+        </div>
+
+        <div class="mini-highlights">
+          <span><i class="bi bi-check-circle-fill"></i> Simple to use</span>
+          <span><i class="bi bi-shield-check"></i> Secure</span>
+          <span><i class="bi bi-rocket-takeoff-fill"></i> Free to get started</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-visual-card">
+          <img src="https://file.aiquickdraw.com/imgcompressed/img/compressed_cd02f18fc4435dfa45ecedc672ebc296.webp" alt="Expense tracker dashboard illustration" class="budget-hero-image">
+        </div>
+
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhrk0-H8OeuydZf5lvfqg_M_G9A0rXufOmegDtMjW4Dw&s=10" alt="Budget tracking icon" class="mini-sparkline-image">
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-strip" id="features">
+    <div class="stat-box">
+      <div class="stat-number">10K+</div>
+      <div class="stat-name">Expenses Tracked</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">5K+</div>
+      <div class="stat-name">Active Goals</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">99%</div>
+      <div class="stat-name">Secure Data</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">24/7</div>
+      <div class="stat-name">Budget Tracking</div>
+    </div>
+  </section>
+
+  <section class="section-header">
+    <h2>Everything You Need to Manage Your Money</h2>
+    <p>Simple tools to help you understand your spending, control your budget, and achieve your financial goals.</p>
+  </section>
+
+  <section class="feature-grid">
+    <div class="feature-card">
+      <div class="icon-wrap green"><i class="bi bi-wallet2"></i></div>
+      <h3>Expense Tracking</h3>
+      <p>Record and organize your daily expenses easily.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon-wrap red"><i class="bi bi-graph-up-arrow"></i></div>
+      <h3>Smart Budgets</h3>
+      <p>Set monthly budgets for food, travel, education, and more.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon-wrap gold"><i class="bi bi-bell-fill"></i></div>
+      <h3>Budget Alerts</h3>
+      <p>Get a warning when spending is nearing a category limit.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon-wrap blue"><i class="bi bi-bar-chart-fill"></i></div>
+      <h3>Spending Analytics</h3>
+      <p>Understand where your money goes with clear visual insights.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon-wrap purple"><i class="bi bi-bullseye"></i></div>
+      <h3>Savings Goals</h3>
+      <p>Create goals and track your progress toward long-term dreams.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon-wrap teal"><i class="bi bi-file-earmark-spreadsheet-fill"></i></div>
+      <h3>Reports</h3>
+      <p>Generate reports and export your spending data when needed.</p>
+    </div>
+  </section>
+
+  <section class="how-it-works">
+    <h2>How It Works</h2>
+    <p>Get started in just a few simple steps.</p>
+
+    <div class="steps-grid">
+      <div class="step-box">
+        <div class="step-number">01</div>
+        <div class="step-icon blue"><i class="bi bi-person-plus"></i></div>
+        <h3>Create Account</h3>
+        <p>Sign up in minutes and create your account.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-number">02</div>
+        <div class="step-icon green"><i class="bi bi-receipt"></i></div>
+        <h3>Add Your Expenses</h3>
+        <p>Record your daily expenses with a few taps.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-number">03</div>
+        <div class="step-icon purple"><i class="bi bi-gear"></i></div>
+        <h3>Set Monthly Budget</h3>
+        <p>Create budgets for each category and stay on track.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-number">04</div>
+        <div class="step-icon orange"><i class="bi bi-graph-up-arrow"></i></div>
+        <h3>Track &amp; Improve</h3>
+        <p>View insights and build better habits over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="budget-section">
+    <div class="budget-copy">
+      <h2>Never Lose Track of Your Budget</h2>
+      <p>Expense Tracker automatically monitors your spending and helps you stay within your limits.</p>
+      <div class="status-row">
+        <span class="status-pill green">Normal</span>
+        <span class="status-pill gold">Warning</span>
+        <span class="status-pill red">Danger</span>
+      </div>
+    </div>
+
+    <div class="budget-panel">
+      <div class="budget-panel-head">
+        <span>Food Budget</span>
+        <div class="budget-amount-inline">₹4,200 <span>/ ₹5,000</span></div>
+      </div>
+      <div class="budget-progress-large">
+        <div class="progress-fill"></div>
+      </div>
+      <div class="budget-warning">You’re approaching your food budget.</div>
+    </div>
+
+    <div class="mini-illustration">
+      <div class="person-card">
+        <div class="person-head"></div>
+        <div class="person-body"></div>
+        <div class="plant"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="overview-section">
+    <div class="overview-copy">
+      <h2>Your Financial Overview at a Glance</h2>
+      <p>A powerful dashboard to track your expenses, budgets, and goals.</p>
+      <div class="overview-card compact">
+        <div class="overview-summary">
+          <div class="summary-box"><span>Total Budget</span><strong>₹15,000</strong></div>
+          <div class="summary-box"><span>Total Spent</span><strong>₹10,500</strong></div>
+          <div class="summary-box"><span>Remaining</span><strong>₹4,500</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overview-panel">
+      <div class="overview-top">
+        <span>Spending by Category</span>
+        <span class="small-badge">October 2026</span>
+      </div>
+      <div class="ring-chart">
+        <div class="ring-inner">
+          <strong>₹10,500</strong>
+        </div>
+      </div>
+      <ul class="overview-list">
+        <li><span class="bullet blue"></span> Food <small>40%</small></li>
+        <li><span class="bullet orange"></span> Travel <small>39%</small></li>
+        <li><span class="bullet green"></span> Education <small>14%</small></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="benefits-grid">
+    <div class="benefit-item">
+      <h3>Turn Your Goals into Reality</h3>
+      <div class="goal-card">
+        <div class="goal-card-head">
+          <span>New Laptop</span>
+          <span>Target</span>
+        </div>
+        <div class="goal-progress">
+          <div class="goal-bar"></div>
+        </div>
+      </div>
+      <p>Set savings goals and track your progress.</p>
+    </div>
+
+    <div class="benefit-item">
+      <h3>Understand Your Spending</h3>
+      <ul class="insight-list">
+        <li>Get insights based on your expenses.</li>
+        <li>You spend 25% more on Food this month.</li>
+        <li>You have ₹4,500 remaining in your monthly budget.</li>
+      </ul>
+    </div>
+
+    <div class="benefit-item">
+      <h3>Your Financial Data, Protected</h3>
+      <ul class="security-list">
+        <li>Secure authentication</li>
+        <li>Private user data</li>
+        <li>Protected database</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <div class="cta-copy">
+      <h2>Ready to Take Control of Your Spending?</h2>
+      <p>Start tracking your expenses and build better financial habits today.</p>
+    </div>
+    <a href="{% url 'register' %}" class="btn btn-primary-saas btn-lg">Get Started Free</a>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <img src="https://play-lh.googleusercontent.com/y8OyoKQntSxC32pUKoPplp7uTj1f4boIe2Gqk1Ah2dQz_UMUTOSR2i5Avr5t7k5tD1FSDF16_XtGxBJWpttbfYY" alt="Expense Tracker Logo" class="brand-logo">
+      <span>Expense Tracker</span>
+    </div>
+    <div class="footer-links">
+      <div>
+        <h4>Product</h4>
+        <a href="#">Features</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Budgets</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="#">Help</a>
+        <a href="#">Reports</a>
+        <a href="#">About</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+        <a href="{% url 'profile' %}">Profile</a>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}

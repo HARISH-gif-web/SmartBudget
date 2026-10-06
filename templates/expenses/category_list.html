@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Expense Categories - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <!-- Header & Actions (Matches Panel 6) -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h3 class="fw-bold text-main mb-1">Expense Categories</h3>
+      <p class="text-muted small mb-0">Manage your expense categories</p>
+    </div>
+    <a href="{% url 'category_add' %}" class="btn btn-primary-saas">
+      <i class="bi bi-plus-lg"></i> Add Category
+    </a>
+  </div>
+
+  <!-- Categories Table Card (Matches Panel 6 exactly) -->
+  <div class="card-saas p-0">
+    <div class="table-responsive">
+      <table class="table table-saas align-middle">
+        <thead>
+          <tr>
+            <th style="width: 50px;">#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th class="text-center" style="width: 80px;">Icon</th>
+            <th class="text-end" style="width: 100px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cat in categories %}
+            <tr>
+              <td class="text-muted fw-semibold small">{{ forloop.counter }}</td>
+              <td>
+                <span class="fs-6 me-1.5">{{ cat.icon }}</span>
+                <span class="fw-semibold text-main">{{ cat.name }}</span>
+              </td>
+              <td class="text-muted small">
+                {{ cat.description|default:"-" }}
+              </td>
+              <td class="text-center">
+                <div class="cat-circle-icon mx-auto 
+                  {% cycle 'bg-warning-subtle' 'bg-primary-subtle' 'bg-purple-subtle' 'bg-danger-subtle' 'bg-success-subtle' %}">
+                  <span>{{ cat.icon }}</span>
+                </div>
+              </td>
+              <td class="text-end">
+                <div class="d-inline-flex gap-1.5">
+                  <a href="{% url 'category_edit' cat.id %}" class="btn-action-edit" title="Edit Category">
+                    <i class="bi bi-pencil-fill"></i>
+                  </a>
+                  <a href="{% url 'category_delete' cat.id %}" class="btn-action-delete" title="Delete Category">
+                    <i class="bi bi-trash3-fill"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="text-center py-4 text-muted">
+                No categories available. Click "+ Add Category" to create one.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

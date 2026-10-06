@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold text-main mb-1">Notifications &amp; Alerts</h2>
+      <p class="text-muted mb-0">Stay informed about budget thresholds, overspending alerts, and goal milestones.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="d-flex align-items-center gap-2">
+      <!-- Filter buttons -->
+      <a href="?filter=all" class="btn btn-sm {% if filter_type == 'all' %}btn-primary-saas{% else %}btn-secondary-saas{% endif %}">
+        All
+      </a>
+      <a href="?filter=unread" class="btn btn-sm {% if filter_type == 'unread' %}btn-primary-saas{% else %}btn-secondary-saas{% endif %}">
+        Unread {% if unread_count > 0 %}<span class="badge bg-danger ms-1">{{ unread_count }}</span>{% endif %}
+      </a>
+
+      {% if unread_count > 0 %}
+        <a href="{% url 'notification_mark_all_read' %}" class="btn btn-secondary-saas btn-sm">
+          <i class="bi bi-check2-all me-1"></i> Mark All as Read
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Notification List -->
+  <div class="card-saas p-0">
+    <div class="d-flex flex-column divide-y">
+      {% for notif in notifications %}
+        <div class="p-3.5 border-bottom border-light d-flex align-items-start justify-content-between gap-3 {% if not notif.is_read %}bg-hover{% endif %}">
+          <div class="d-flex align-items-start gap-3">
+            <div class="metric-icon-wrap mt-0.5 fs-4 
+              {% if notif.notification_type == 'danger' %}bg-danger-subtle text-danger
+              {% elif notif.notification_type == 'warning' %}bg-warning-subtle text-warning
+              {% elif notif.notification_type == 'success' %}bg-success-subtle text-success
+              {% else %}bg-primary-subtle text-primary{% endif %}"
+            >
+              {% if notif.notification_type == 'danger' %}🔴
+              {% elif notif.notification_type == 'warning' %}⚠️
+              {% elif notif.notification_type == 'success' %}🎯
+              {% else %}ℹ️{% endif %}
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="fw-bold text-main">{{ notif.title }}</span>
+                {% if not notif.is_read %}
+                  <span class="badge bg-primary-subtle text-primary rounded-pill small" style="font-size: 0.65rem;">NEW</span>
+                {% endif %}
+              </div>
+              <p class="small text-muted mb-1">{{ notif.message }}</p>
+              <small class="text-light" style="font-size: 0.75rem;">
+                <i class="bi bi-clock me-1"></i>{{ notif.created_at|timesince }} ago
+              </small>
+            </div>
+          </div>
+
+          {% if not notif.is_read %}
+            <a href="{% url 'notification_mark_read' notif.id %}" class="btn btn-sm btn-secondary-saas text-nowrap" title="Mark Read">
+              <i class="bi bi-check2"></i> Mark Read
+            </a>
+          {% endif %}
+        </div>
+      {% empty %}
+        <div class="p-5 text-center text-muted">
+          <div class="fs-1 mb-2">🔔</div>
+          <h5 class="fw-bold text-main">No Notifications</h5>
+          <p class="small mb-0">You're all caught up! When budget alerts or savings milestones occur, they'll show up here.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

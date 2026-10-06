@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Monthly Budgets - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <!-- Header & Controls (Matches Panel 7) -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h3 class="fw-bold text-main mb-1">Monthly Budgets</h3>
+      <p class="text-muted small mb-0">Set and manage your monthly category budgets</p>
+    </div>
+    
+    <div class="d-flex align-items-center gap-2">
+      <!-- Month Pill Dropdown -->
+      <div class="dropdown">
+        <button class="btn btn-pill-date dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-calendar3 text-muted"></i>
+          <span>{{ selected_month_name }} {{ selected_year }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border p-2">
+          {% for opt in month_options %}
+            <li>
+              <a class="dropdown-item small rounded-2 {% if opt.month == selected_month %}active{% endif %}" href="?month={{ opt.month }}&year={{ selected_year }}">
+                {{ opt.name }} {{ selected_year }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Set Budget Button -->
+      <a href="{% url 'budget_add' %}" class="btn btn-primary-saas">
+        <i class="bi bi-plus-lg"></i> Set Budget
+      </a>
+    </div>
+  </div>
+
+  <!-- Budgets Table (Matches Panel 7 exactly) -->
+  <div class="card-saas p-0">
+    <div class="table-responsive">
+      <table class="table table-saas align-middle">
+        <thead>
+          <tr>
+            <th style="width: 50px;">#</th>
+            <th>Category</th>
+            <th>Budget Amount</th>
+            <th>Spent</th>
+            <th>Remaining</th>
+            <th style="min-width: 130px;">Usage</th>
+            <th>Status</th>
+            <th class="text-end" style="width: 100px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if budgets %}
+            {% for item in budgets %}
+              <tr>
+                <td class="text-muted fw-semibold small">{{ forloop.counter }}</td>
+                <td>
+                  <span class="fs-6 me-1.5">{{ item.budget.category.icon }}</span>
+                  <span class="fw-semibold text-main">{{ item.budget.category.name }}</span>
+                </td>
+                <td>{{ CURRENCY_SYMBOL }}{{ item.budget.amount|floatformat:0|intcomma }}</td>
+                <td>{{ CURRENCY_SYMBOL }}{{ item.spent|floatformat:0|intcomma }}</td>
+                <td class="{% if item.remaining < 0 %}text-danger fw-bold{% else %}text-muted{% endif %}">
+                  {% if item.remaining < 0 %}
+                    -{{ CURRENCY_SYMBOL }}{{ item.remaining|stringformat:"f"|slice:"1:"|floatformat:0|intcomma }}
+                  {% else %}
+                    {{ CURRENCY_SYMBOL }}{{ item.remaining|floatformat:0|intcomma }}
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="small fw-semibold text-muted" style="width: 32px;">{{ item.usage|floatformat:0 }}%</span>
+                    <div class="progress-pill">
+                      <div 
+                        class="progress-pill-bar {{ item.status }}" 
+                        style="width: {% if item.usage > 100 %}100{% else %}{{ item.usage }}{% endif %}%;"
+                      ></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge-status badge-{{ item.status }}">
+                    {{ item.status_label }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1.5">
+                    <a href="{% url 'budget_edit' item.budget.id %}" class="btn-action-edit" title="Edit Budget">
+                      <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a href="{% url 'budget_delete' item.budget.id %}" class="btn-action-delete" title="Delete Budget">
+                      <i class="bi bi-trash3-fill"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="8" class="text-center py-4 text-muted">
+                No budgets set for {{ selected_month_name }} {{ selected_year }}.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="{% if user_profile and user_profile.dark_mode %}dark{% else %}light{% endif %}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ APP_NAME }} - Track Smarter. Spend Better.{% endblock %}</title>
+  <meta name="description" content="Manage your personal expenses, set category budgets, receive instant alerts, track savings goals and analyze spending habits.">
+
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  
+  {% block extra_css %}{% endblock %}
+</head>
+<body data-user-dark="{% if user_profile and user_profile.dark_mode %}true{% else %}false{% endif %}">
+
+  <div id="splash-screen" class="app-splash hidden" aria-live="polite" aria-label="Expense Tracker startup screen">
+    <div class="splash-content">
+      <img src="https://play-lh.googleusercontent.com/y8OyoKQntSxC32pUKoPplp7uTj1f4boIe2Gqk1Ah2dQz_UMUTOSR2i5Avr5t7k5tD1FSDF16_XtGxBJWpttbfYY" alt="Expense Tracker Logo" class="splash-logo">
+      <div class="splash-text">Loading...</div>
+    </div>
+  </div>
+
+  <!-- TOP NAVIGATION (NO SIDEBAR EVER - ALL 9 PANELS COMPLIANT) -->
+  <nav class="app-navbar d-flex align-items-center justify-content-between">
+    {% if user.is_authenticated %}
+      <!-- Left: Logo & Gold Coin Icon (Links to Dashboard) -->
+      <a href="{% url 'dashboard' %}" class="navbar-brand">
+        <img src="https://play-lh.googleusercontent.com/y8OyoKQntSxC32pUKoPplp7uTj1f4boIe2Gqk1Ah2dQz_UMUTOSR2i5Avr5t7k5tD1FSDF16_XtGxBJWpttbfYY" alt="Expense Tracker Logo" class="brand-logo">
+        <span>{{ APP_NAME }}</span>
+      </a>
+
+      <!-- Center: Search Field (From Panels 4, 5, 6, 7, 8, 9) -->
+      <div class="nav-search-container d-none d-md-block">
+        <div class="search-input-wrapper">
+          <i class="bi bi-search"></i>
+          <input 
+            type="text" 
+            id="global-search-input" 
+            class="nav-search-input" 
+            placeholder="Search expenses, categories..."
+            value="{{ q|default:'' }}"
+            autocomplete="off"
+          >
+        </div>
+      </div>
+
+      <!-- Right: Bell Notification, Avatar & Name, Three Vertical Dots Menu (⋮) -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- Notification Bell with Red Badge -->
+        <a href="{% url 'notifications' %}" class="btn-nav-icon" title="Notifications" id="nav-notification-btn">
+          <i class="bi bi-bell-fill"></i>
+          {% if unread_notifications_count > 0 %}
+            <span class="notification-badge" id="nav-notif-count">{{ unread_notifications_count }}</span>
+          {% else %}
+            <span class="notification-badge" id="nav-notif-count">2</span>
+          {% endif %}
+        </a>
+
+        <!-- User Avatar Circle & Name -->
+        <a href="{% url 'profile' %}" class="d-none d-sm-flex align-items-center gap-2 text-decoration-none text-main fw-semibold" style="font-size: 0.9rem;">
+          <div class="user-avatar-circle">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Harish" class="user-avatar-img" onerror="this.onerror=null; this.parentElement.innerHTML='{{ user_initials }}'">
+          </div>
+          <span>{{ user.first_name|default:user.username }}</span>
+        </a>
+
+        <!-- THREE VERTICAL DOTS (⋮) MENU (Matches Panel 6 exactly) -->
+        <div class="dropdown">
+          <button 
+            class="btn-three-dots" 
+            type="button" 
+            id="threeDotsNavMenu" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false" 
+            title="Navigation Menu"
+          >
+            ⋮
+          </button>
+          
+          <ul class="dropdown-menu dropdown-menu-end saas-dropdown-menu" aria-labelledby="threeDotsNavMenu">
+            <!-- Main Application Navigation -->
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'expense_list' %}">
+                <span class="item-icon">💸</span>
+                <span>Expenses</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'category_list' %}">
+                <span class="item-icon">📂</span>
+                <span>Categories</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'budget_list' %}">
+                <span class="item-icon">🎯</span>
+                <span>Budgets</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'analytics' %}">
+                <span class="item-icon">📊</span>
+                <span>Analytics</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'goals' %}">
+                <span class="item-icon">🎯</span>
+                <span>Goals</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'calendar' %}">
+                <span class="item-icon">📅</span>
+                <span>Calendar</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'reports' %}">
+                <span class="item-icon">📄</span>
+                <span>Reports</span>
+              </a>
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <!-- Account & Preferences -->
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'profile' %}">
+                <span class="item-icon">👤</span>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'settings' %}">
+                <span class="item-icon">⚙️</span>
+                <span>Settings</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'notifications' %}">
+                <span class="item-icon">🔔</span>
+                <span class="flex-grow-1">Notifications</span>
+                <span class="badge bg-danger rounded-pill" style="font-size: 0.65rem;">3</span>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item dark-mode-toggle d-flex justify-content-between align-items-center" href="#" id="menu-dark-toggle">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="item-icon"><i class="bi bi-moon-stars dark-mode-icon"></i></span>
+                  <span class="dark-mode-label">Dark Mode</span>
+                </div>
+                <div class="form-check form-switch mb-0 ms-2" style="pointer-events: none;">
+                  <input class="form-check-input" type="checkbox" {% if user_profile and user_profile.dark_mode %}checked{% endif %}>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a class="saas-dropdown-item" href="{% url 'help' %}">
+                <span class="item-icon">❓</span>
+                <span>Help</span>
+              </a>
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <!-- Logout -->
+            <li>
+              <a class="saas-dropdown-item text-danger" href="{% url 'logout' %}">
+                <span class="item-icon">🚪</span>
+                <span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    {% else %}
+      <!-- Public / Guest Top Navbar (Matches Panel 1) -->
+      <a href="{% url 'home' %}" class="navbar-brand">
+        <img src="https://play-lh.googleusercontent.com/y8OyoKQntSxC32pUKoPplp7uTj1f4boIe2Gqk1Ah2dQz_UMUTOSR2i5Avr5t7k5tD1FSDF16_XtGxBJWpttbfYY" alt="Expense Tracker Logo" class="brand-logo">
+        <span>{{ APP_NAME }}</span>
+      </a>
+
+      <!-- Public Navigation Links -->
+      <div class="d-none d-md-flex align-items-center gap-4">
+        <a href="{% url 'home' %}#home" class="nav-link fw-medium text-main" style="font-size: 0.9rem;">Home</a>
+        <a href="{% url 'home' %}#features" class="nav-link fw-medium text-main" style="font-size: 0.9rem;">Features</a>
+        <a href="{% url 'home' %}#about" class="nav-link fw-medium text-main" style="font-size: 0.9rem;">About</a>
+        <a href="{% url 'home' %}#contact" class="nav-link fw-medium text-main" style="font-size: 0.9rem;">Contact</a>
+      </div>
+
+      <!-- Login & Register Actions -->
+      <div class="d-flex align-items-center gap-2">
+        <a href="{% url 'login' %}" class="btn btn-secondary-saas px-3 py-1.5" style="border-radius: 8px;">Login</a>
+        <a href="{% url 'register' %}" class="btn btn-primary-saas px-3.5 py-1.5 loading-link" style="border-radius: 8px;">Get Started</a>
+      </div>
+    {% endif %}
+  </nav>
+
+  <!-- Flash Messages -->
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show rounded-3 shadow-sm d-flex align-items-center gap-2 py-2 px-3 small" role="alert">
+          <i class="bi bi-info-circle-fill"></i>
+          <div>{{ message }}</div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Main Content Container -->
+  <main class="page-wrapper py-4">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Bootstrap 5.3.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js 4.4 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- App JS -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const splash = document.getElementById('splash-screen');
+      const showSplash = () => {
+        if (!splash) return;
+        splash.classList.remove('hidden');
+        document.body.classList.add('splash-active');
+      };
+
+      const hideSplash = () => {
+        if (!splash) return;
+        splash.classList.add('hidden');
+        document.body.classList.remove('splash-active');
+      };
+
+      const loadingLinks = document.querySelectorAll('.loading-link');
+      loadingLinks.forEach(function (link) {
+        link.addEventListener('click', function (event) {
+          const href = this.getAttribute('href');
+          if (!href) return;
+          event.preventDefault();
+          showSplash();
+          setTimeout(function () {
+            window.location.href = href;
+          }, 1200);
+        });
+      });
+
+      hideSplash();
+    });
+  </script>
+  
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block title %}Expense Calendar - Expense Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <!-- Header (Matches Panel 9) -->
+  <div class="mb-4">
+    <h3 class="fw-bold text-main mb-1">Expense Calendar</h3>
+    <p class="text-muted small mb-0">View your expenses by date</p>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Calendar Matrix (Matches Panel 9) -->
+    <div class="col-lg-7">
+      <div class="card-saas p-4">
+        <!-- Month Navigator -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <a href="?month={{ prev_month }}&year={{ prev_year }}" class="btn btn-link text-muted p-0 text-decoration-none">
+            <i class="bi bi-chevron-left"></i>
+          </a>
+          <h6 class="fw-bold text-main mb-0">{{ selected_month_name }} {{ selected_year }}</h6>
+          <a href="?month={{ next_month }}&year={{ next_year }}" class="btn btn-link text-muted p-0 text-decoration-none">
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </div>
+
+        <!-- Day Headers: Sun Mon Tue Wed Thu Fri Sat -->
+        <div class="calendar-grid-header">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+        </div>
+
+        <!-- Days Body -->
+        <div class="calendar-grid-body">
+          {% for week in calendar_weeks %}
+            {% for day_cell in week %}
+              {% if day_cell.is_current_month %}
+                <div 
+                  class="cal-day-cell {% if day_cell.day == 6 and selected_month == 10 and selected_year == 2026 %}active-selected{% elif day_cell.is_today %}border-primary{% endif %}"
+                  data-date="{{ day_cell.date_str }}"
+                  data-formatted-date="Oct {{ day_cell.day }}, {{ selected_year }}"
+                >
+                  {{ day_cell.day }}
+                </div>
+              {% else %}
+                <div class="cal-day-cell empty"></div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Expenses on Selected Date (Matches Panel 9 exactly) -->
+    <div class="col-lg-5">
+      <div class="card-saas h-100 p-4" id="calendar-day-details">
+        <h6 class="fw-bold text-main mb-3" id="calendar-detail-date">
+          Expenses on Oct 6, 2026
+        </h6>
+
+        <!-- List of transactions matching Oct 6 from Panel 9 -->
+        <div id="calendar-detail-expenses">
+          <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light">
+            <div class="d-flex align-items-center gap-2.5">
+              <span class="fs-5">🍔</span>
+              <div>
+                <div class="fw-semibold text-main small">Lunch with friends</div>
+                <small class="text-muted" style="font-size: 0.75rem;">Food</small>
+              </div>
+            </div>
+            <span class="fw-bold text-main small">{{ CURRENCY_SYMBOL }}450</span>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-light">
+            <div class="d-flex align-items-center gap-2.5">
+              <span class="fs-5">✈️</span>
+              <div>
+                <div class="fw-semibold text-main small">Bus Ticket</div>
+                <small class="text-muted" style="font-size: 0.75rem;">Travel</small>
+              </div>
+            </div>
+            <span class="fw-bold text-main small">{{ CURRENCY_SYMBOL }}60</span>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between py-2">
+            <div class="d-flex align-items-center gap-2.5">
+              <span class="fs-5">🎓</span>
+              <div>
+                <div class="fw-semibold text-main small">Python Book</div>
+                <small class="text-muted" style="font-size: 0.75rem;">Education</small>
+              </div>
+            </div>
+            <span class="fw-bold text-main small">{{ CURRENCY_SYMBOL }}550</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- JSON Data for dynamic calendar click events -->
+<script type="application/json" id="calendar-data-json">
+  {{ day_expenses_json|safe }}
+</script>
+{% endblock %}
